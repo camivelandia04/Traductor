@@ -14,13 +14,9 @@ from googletrans import Translator
 st.title("TRADUCTOR DE IDIOMAS ROMANCE")
 st.subheader("Escucho lo que quieres traducir.")
 
-# Imagen principal
-image = Image.open('OIG7.jpg')
-st.image(image,width=300)
-
-# Nueva imagen con idiomas
-image2 = Image.open('Apps-de-traduccion.jpg')
-st.image(image2, caption="Idiomas Romance disponibles", width=400)
+# Imagen única del traductor
+image = Image.open('Apps-de-traduccion.jpg')
+st.image(image, caption="Idiomas Romance disponibles", width=400)
 
 with st.sidebar:
     st.subheader("Traductor.")
@@ -30,7 +26,7 @@ with st.sidebar:
 
 st.write("Toca el Botón y habla lo que quieres traducir")
 
-stt_button = Button(label=" Escuchar 🎤", width=300, height=50)
+stt_button = Button(label="Escuchar 🎤", width=300, height=50)
 
 stt_button.js_on_event("button_click", CustomJS(code="""
     var recognition = new webkitSpeechRecognition();
@@ -50,10 +46,6 @@ stt_button.js_on_event("button_click", CustomJS(code="""
         }
     }
     
-    recognition.onend = function() {
-        console.log("Reconocimiento detenido");
-    }
-    
     recognition.start();
 """))
 
@@ -65,7 +57,7 @@ result = streamlit_bokeh_events(
     override_height=75,
     debounce_time=0)
 
-# Diccionario de idiomas romance
+# Idiomas romances
 romance_languages = {
     "Español": "es",
     "Portugués": "pt",
@@ -77,6 +69,7 @@ romance_languages = {
 }
 
 if result:
+
     if "GET_TEXT" in result:
         st.write(result.get("GET_TEXT"))
 
@@ -86,11 +79,10 @@ if result:
         pass
 
     st.title("Texto a Audio")
-    translator = Translator()
 
+    translator = Translator()
     text = str(result.get("GET_TEXT"))
 
-    # Selección de idioma de entrada
     in_lang = st.selectbox(
         "Selecciona el lenguaje de Entrada",
         list(romance_languages.keys()),
@@ -98,7 +90,6 @@ if result:
 
     input_language = romance_languages[in_lang]
 
-    # Selección de idioma de salida
     out_lang = st.selectbox(
         "Selecciona el lenguaje de salida",
         list(romance_languages.keys()),
@@ -108,12 +99,7 @@ if result:
 
     english_accent = st.selectbox(
         "Selecciona el acento",
-        (
-            "Defecto",
-            "España",
-            "Estados Unidos",
-            "Reino Unido",
-        ),
+        ("Defecto","España","Estados Unidos","Reino Unido"),
     )
 
     if english_accent == "Defecto":
@@ -161,8 +147,11 @@ if result:
 
 
     def remove_files(n):
+
         mp3_files = glob.glob("temp/*mp3")
+
         if len(mp3_files) != 0:
+
             now = time.time()
             n_days = n * 86400
 
